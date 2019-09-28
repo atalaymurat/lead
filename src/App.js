@@ -1,26 +1,81 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import LeadList from './components/LeadList.js';
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    leads: [],
+    title: '',
+    description: '',
+    disabled: false
+  };
+
+  handleChange = event => {
+    this.setState({[event.target.name]: event.target.value});
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    if (this.state.disabled){
+      return;
+    }
+    this.setState({disabled: true})
+    const lead = {
+      title: this.state.title,
+      description: this.state.description,
+    };
+
+    axios
+      .post('https://her-app-rails.herokuapp.com/leads', lead)
+      .then(response => {
+        console.log(response);
+        console.log(response.data);
+        this.setState({leads: [response.data].concat(this.state.leads)});
+        this.setState({title: ' ', description: ' '});
+      })
+    .then( this.setState({disabled: false}));
+  };
+
+  deleteLead = id => {
+    axios
+      .delete(`https://her-app-rails.herokuapp.com/leads/${id}`)
+      .then(res => {
+        const leads = this.state.leads.filter( lead => lead.id !== id)
+        this.setState({leads: leads})
+
+
+      })
+  };
+  getLeads = () => {
+    axios
+      .get('https://her-app-rails.herokuapp.com/leads')
+      .then(response => this.setState({leads: response.data.leads}))
+      .catch(error => console.log(error));
+  
+  }
+
+  componentDidMount() {
+      this.getLeads()
+    
+  }
+
+  render() {
+    return (
+      <div className="App container">
+        <h1>Leads Hot List</h1>
+        <LeadList
+          leads={this.state.leads}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          onDelete={this.deleteLead}
+          title={this.state.title}
+          description={this.state.description}
+          disabled={this.state.disabled}
+        />
+      </div>
+    );
+  }
 }
 
 export default App;
