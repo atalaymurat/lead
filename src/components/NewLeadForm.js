@@ -25,7 +25,7 @@ class NewLeadForm extends React.Component {
               </div>
             </div>
             <div className="form-group row">
-              <label htmlFor="title" className="col-sm-3 col-form-label">
+              <label htmlFor="description" className="col-sm-3 col-form-label">
                 Description
               </label>
               <div className="col-sm-9">

@@ -8,7 +8,7 @@ class App extends React.Component {
     leads: [],
     title: '',
     description: '',
-    disabled: false
+    disabled: false,
   };
 
   handleChange = event => {
@@ -17,10 +17,10 @@ class App extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    if (this.state.disabled){
+    if (this.state.disabled) {
       return;
     }
-    this.setState({disabled: true})
+    this.setState({disabled: true});
     const lead = {
       title: this.state.title,
       description: this.state.description,
@@ -34,30 +34,44 @@ class App extends React.Component {
         this.setState({leads: [response.data].concat(this.state.leads)});
         this.setState({title: ' ', description: ' '});
       })
-    .then( this.setState({disabled: false}));
+      .then(this.setState({disabled: false}));
   };
 
   deleteLead = id => {
     axios
       .delete(`https://her-app-rails.herokuapp.com/leads/${id}`)
       .then(res => {
-        const leads = this.state.leads.filter( lead => lead.id !== id)
-        this.setState({leads: leads})
-
-
-      })
+        const leads = this.state.leads.filter(lead => lead.id !== id);
+        this.setState({leads: leads});
+      });
   };
+
+  onUpdate = item => {
+        const lead = {
+          id: item.id, 
+          title: item.title,
+          description: item.description
+        }
+
+    axios
+      .put(`https://her-app-rails.herokuapp.com/leads/${item.id}`, lead)
+      .then(res => {
+        const leads = this.state.leads.filter(lead => lead.id !== item.id)
+        this.setState( {leads: [res.data].concat(leads)} ) 
+        this.setState({title:'', description:''})
+      })
+  
+  };
+
   getLeads = () => {
     axios
       .get('https://her-app-rails.herokuapp.com/leads')
       .then(response => this.setState({leads: response.data.leads}))
       .catch(error => console.log(error));
-  
-  }
+  };
 
   componentDidMount() {
-      this.getLeads()
-    
+    this.getLeads();
   }
 
   render() {
@@ -68,6 +82,8 @@ class App extends React.Component {
           leads={this.state.leads}
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
+          handleEdit={this.handleEdit}
+          onUpdate={this.onUpdate}
           onDelete={this.deleteLead}
           title={this.state.title}
           description={this.state.description}
