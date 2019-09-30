@@ -1,6 +1,7 @@
 import React from 'react';
 import Linkify from 'react-linkify';
 import EditLead from './EditLead'
+import TimeAgo from 'react-timeago'
 
 class Lead extends React.Component {
   state = {
@@ -28,7 +29,12 @@ class Lead extends React.Component {
             <Linkify properties={{target: '_blank'}}>
               <pre className="card-text">{this.props.lead.description}</pre>
             </Linkify>
-            <p className="card-text">{this.props.lead.created_at}</p>
+            <p className="card-text">
+              <TimeAgo 
+                date={this.props.lead.created_at}
+              />
+            
+            </p>
 
             <button className="btn btn-sm btn-info" onClick={this.handleDelete}>
               Delete

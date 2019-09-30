@@ -36,7 +36,6 @@ class LeadList extends React.Component {
                 <Lead 
                   lead={lead} 
                   onDelete={this.props.onDelete}
-		  onUpdate={this.props.onUpdate}
                   handleChange={this.props.handleChange}
                   onUpdate={this.props.onUpdate}
                 />
