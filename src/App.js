@@ -46,7 +46,7 @@ class App extends React.Component {
       });
   };
 
-  onUpdate = item => {
+  updateLead = item => {
         const lead = {
           id: item.id, 
           title: item.title,
@@ -54,7 +54,7 @@ class App extends React.Component {
         }
 
     axios
-      .put(`https://her-app-rails.herokuapp.com/leads/${item.id}`, lead)
+      .get(`https://her-app-rails.herokuapp.com/leads/${item.id}`)
       .then(res => {
         const leads = this.state.leads.filter(lead => lead.id !== item.id)
         this.setState( {leads: [res.data].concat(leads)} ) 
@@ -83,8 +83,8 @@ class App extends React.Component {
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           handleEdit={this.handleEdit}
-          onUpdate={this.onUpdate}
-          onDelete={this.deleteLead}
+          onUpdate={this.updateLead}
+	  onDelete={this.deleteLead}
           title={this.state.title}
           description={this.state.description}
           disabled={this.state.disabled}

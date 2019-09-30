@@ -5,13 +5,6 @@ import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
 class LeadList extends React.Component {
-  state = {
-    edit: false
-  };
-
-  handleDisable = () => {
-    this.setState({edit: !this.state.edit})
-  }
 
   render() {
     return (
@@ -43,11 +36,9 @@ class LeadList extends React.Component {
                 <Lead 
                   lead={lead} 
                   onDelete={this.props.onDelete}
+		  onUpdate={this.props.onUpdate}
                   handleChange={this.props.handleChange}
                   onUpdate={this.props.onUpdate}
-                  handleEdit={this.props.handleEdit}
-                  edit={this.state.edit}
-                  handleDisable={this.handleDisable}
                 />
               </div>
             );

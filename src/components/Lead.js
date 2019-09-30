@@ -1,31 +1,19 @@
 import React from 'react';
 import Linkify from 'react-linkify';
+import EditLead from './EditLead'
 
 class Lead extends React.Component {
   state = {
-    edit: false,
-    title: '',
-    description: ''
+    edit: false
   };
-
-  handleChange = (event) => {
-    this.setState({ [event.target.name] : event.target.value});
-  }
 
   handleDelete = () => {
     this.props.onDelete(this.props.lead.id);
   };
 
-  handleEdit = () => {
-    let item = {
-      id: this.props.lead.id,
-      title: this.state.title === '' ? this.props.lead.title : this.state.title,
-      description: this.state.description === '' ? this.props.lead.description : this.state.description,
-    };
-    this.props.onUpdate(item);
-    this.props.handleDisable();
-    this.setState( { edit: !this.state.edit})
-  };
+  handleEditClick = () => {
+    this.setState({edit: !this.state.edit})
+  }
 
   render() {
     if (!this.state.edit) {
@@ -47,10 +35,9 @@ class Lead extends React.Component {
             </button>
             <button
               className="btn btn-sm btn-info ml-2"
-              onClick={this.handleEdit}
-              disabled={this.props.edit}
+              onClick={this.handleEditClick}
             >
-              {this.state.edit ? 'Save' : 'Edit'}
+              Edit
             </button>
           </div>
         </div>
@@ -58,51 +45,12 @@ class Lead extends React.Component {
     }
     if (this.state.edit) {
       return (
-        <div
-          className="card text-white bg-warning mb-2"
-          style={{maxWidth: 680}}>
-          <div className="card-header">Edit</div>
-          <div className="card-body">
-            <form 
-              onSubmit={e => this.handleEdit(e)}>
-              <div className="form-group row">
-                <label className="col-sm-3 col-form-label" htmlFor="title">
-                  Title
-                </label>
-                <div className="col-sm-9">
-                  <input
-                    className="form-control"
-                    type="text"
-                    onChange={this.handleChange}
-                    defaultValue={this.props.lead.title}
-                    name="title"
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-                <label
-                  className="col-sm-3 col-form-label"
-                  htmlFor="description">
-                  Description
-                </label>
-                <div className="col-sm-9">
-                  <textarea
-                    type="text"
-                    name="description"
-                    onChange={this.handleChange}
-                    defaultValue={this.props.lead.description}
-                    className="form-control"
-                  />
-                </div>
-              </div>
-              <button 
-                className="btn btn-sm btn-dark" 
-              >
-                Save
-              </button>
-            </form>
-          </div>
-        </div>
+	<EditLead 
+	  lead={this.props.lead}
+	  edit={this.state.edit}
+	  handleEditClick={this.handleEditClick}
+	  onUpdate={this.props.onUpdate}
+	/>
       );
     }
   }
