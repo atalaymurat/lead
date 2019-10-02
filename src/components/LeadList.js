@@ -21,7 +21,7 @@ class LeadList extends React.Component {
             style={{maxWidth: 680}}
           >
           <Loader 
-            type="Triangle" 
+            type="ThreeDots" 
             color="orange" 
             height={150} 
             width={150}

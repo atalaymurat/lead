@@ -2,7 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LeadList from './components/LeadList.js';
 import axios from 'axios';
-import actionCable from 'actioncable'
+import actionCable from 'actioncable';
 
 class App extends React.Component {
   state = {
@@ -13,28 +13,26 @@ class App extends React.Component {
   };
 
   createSocket() {
-    let cable = actionCable.createConsumer(`ws://localhost:3001/cable`);
+    let cable = actionCable.createConsumer(
+      'wss://her-app-rails.herokuapp.com/cable',
+    );
     this.leads = cable.subscriptions.create(
       {
         channel: 'LineChannel',
       },
       {
         connected: () => {},
-        received: (data) => {
+        received: data => {
           console.log(data);
-	  this.setState({leads: [data].concat(this.state.leads)})
+          this.setState({leads: [data].concat(this.state.leads)});
         },
-	create: function(leadContent) {
-	  console.log("this lead content", leadContent)
+        create: function(leadContent) {
+          console.log('New Content : ', leadContent);
           this.perform('create', {
-	    title: leadContent.title,
-	    description: leadContent.description
-	
-	  });
-	
-	},
-      
-
+            title: leadContent.title,
+            description: leadContent.description,
+          });
+        },
       },
     );
   }
@@ -45,16 +43,20 @@ class App extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    
+    if (this.state.disabled){
+    return
+    }
+    this.setState({disabled: true})
+
     const lead = {
       title: this.state.title,
       description: this.state.description,
     };
-    
+
     this.leads.create(lead);
-    this.setState({ title:'', description:''});
-    
-    
+    this.setState({title: '', description: ''});
+
+    this.setState({disabled: false})
 
     //axios
     // .post('/leads', lead)
@@ -63,7 +65,6 @@ class App extends React.Component {
     //   this.setState({title: ' ', description: ' '});
     //  })
     //  .then(this.setState({disabled: false}));
-
   };
 
   deleteLead = id => {
@@ -85,14 +86,14 @@ class App extends React.Component {
 
   getLeads = () => {
     axios
-      .get('/leads')
+      .get('https://her-app-rails.herokuapp.com/leads')
       .then(response => this.setState({leads: response.data.leads}))
       .catch(error => console.log(error));
   };
 
   componentDidMount() {
     this.getLeads();
-    this.createSocket() ;
+    this.createSocket();
   }
 
   render() {
