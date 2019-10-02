@@ -26,7 +26,6 @@ class EditLead extends React.Component {
   };
 
   handleSubmit = event => {
-    event.preventDefault();
     const item = {
       id: this.state.id,
       title: this.state.title,
@@ -34,9 +33,10 @@ class EditLead extends React.Component {
     };
     axios
       .put(`https://her-app-rails.herokuapp.com/leads/${item.id}`, item)
-      .then(res => console.log(res.data))
-      .then(this.props.onUpdate(item))
+      .then(res => this.props.onUpdate(res.data))
       .then(this.props.handleEditClick());
+
+    event.preventDefault();
   };
 
   render() {

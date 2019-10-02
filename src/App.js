@@ -29,8 +29,6 @@ class App extends React.Component {
     axios
       .post('https://her-app-rails.herokuapp.com/leads', lead)
       .then(response => {
-        console.log(response);
-        console.log(response.data);
         this.setState({leads: [response.data].concat(this.state.leads)});
         this.setState({title: ' ', description: ' '});
       })
@@ -47,20 +45,12 @@ class App extends React.Component {
   };
 
   updateLead = item => {
-        const lead = {
-          id: item.id, 
-          title: item.title,
-          description: item.description
-        }
 
-    axios
-      .get(`https://her-app-rails.herokuapp.com/leads/${item.id}`)
-      .then(res => {
-        const leads = this.state.leads.filter(lead => lead.id !== item.id)
-        this.setState( {leads: [res.data].concat(leads)} ) 
+	let index = this.state.leads.findIndex(l => (l.id === item.id) )
+	let leadsArr = this.state.leads
+	leadsArr.splice(index, 1, item) 
+        this.setState( {leads: leadsArr} ) 
         this.setState({title:'', description:''})
-      })
-  
   };
 
   getLeads = () => {
