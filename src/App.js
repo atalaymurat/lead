@@ -14,17 +14,32 @@ class App extends React.Component {
 
   createSocket() {
     let cable = actionCable.createConsumer(
-      'wss://her-app-rails.herokuapp.com/cable',
+      'wss://her-app-rails.herokuapp.com//cable',
     );
-    this.leads = cable.subscriptions.create(
+    this.socketLead = cable.subscriptions.create(
       {
         channel: 'LineChannel',
       },
       {
         connected: () => {},
         received: data => {
-          console.log(data);
-          this.setState({leads: [data].concat(this.state.leads)});
+	  console.log(data);
+
+	  if (data.action === "delete") {
+	  const leads = this.state.leads.filter(lead => lead.id !== data.id);
+	  this.setState({leads: leads});
+	  }
+
+	  if (data.action === "create") {
+	    this.setState({leads: [data].concat(this.state.leads)});
+	  }
+	  if (data.action === "update") {
+	  console.log(" this will be update block")
+	  let index = this.state.leads.findIndex(l => l.id === data.id);
+	  let leadsArr = this.state.leads;
+	  leadsArr.splice(index, 1, data);
+	  this.setState({leads: leadsArr});
+	  }
         },
         create: function(leadContent) {
           console.log('New Content : ', leadContent);
@@ -32,7 +47,19 @@ class App extends React.Component {
             title: leadContent.title,
             description: leadContent.description,
           });
-        },
+	},
+	delete: function(leadId) {
+	  console.log(leadId)
+	  this.perform('delete', {id: leadId} )
+	},
+	update: function(lead) {
+	  this.perform('update', {
+	    id: lead.id, 
+	    title: lead.title,
+	    description: lead.description,
+	    created_at: lead.created_at
+	  });
+	}
       },
     );
   }
@@ -53,7 +80,7 @@ class App extends React.Component {
       description: this.state.description,
     };
 
-    this.leads.create(lead);
+    this.socketLead.create(lead);
     this.setState({title: '', description: ''});
 
     this.setState({disabled: false})
@@ -68,19 +95,16 @@ class App extends React.Component {
   };
 
   deleteLead = id => {
-    axios
-      .delete(`https://her-app-rails.herokuapp.com/leads/${id}`)
-      .then(res => {
-        const leads = this.state.leads.filter(lead => lead.id !== id);
-        this.setState({leads: leads});
-      });
+    this.socketLead.delete(id)
+    //axios
+    //.delete(`https://her-app-rails.herokuapp.com/leads/${id}`)
+    // .then(res => {
+    //    console.log(res)
   };
 
+
   updateLead = item => {
-    let index = this.state.leads.findIndex(l => l.id === item.id);
-    let leadsArr = this.state.leads;
-    leadsArr.splice(index, 1, item);
-    this.setState({leads: leadsArr});
+    this.socketLead.update(item);
     this.setState({title: '', description: ''});
   };
 
