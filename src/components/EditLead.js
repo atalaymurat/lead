@@ -6,17 +6,18 @@ class EditLead extends React.Component {
     title: '',
     description: '',
     id: '',
+    created_at:''
   };
 
   componentDidMount() {
     axios
       .get(`https://her-app-rails.herokuapp.com/leads/${this.props.lead.id}`)
       .then(res => {
-        console.log(res.data.description);
         this.setState({
           title: res.data.title,
           description: res.data.description,
-          id: res.data.id,
+	  id: res.data.id,
+	  created_at: res.data.created_at
         });
       });
   }
@@ -30,11 +31,10 @@ class EditLead extends React.Component {
       id: this.state.id,
       title: this.state.title,
       description: this.state.description,
+      created_at: this.state.created_at
     };
-    axios
-      .put(`https://her-app-rails.herokuapp.com/leads/${item.id}`, item)
-      .then(res => this.props.onUpdate(res.data))
-      .then(this.props.handleEditClick());
+      this.props.onUpdate(item)
+      this.props.handleEditClick();
 
     event.preventDefault();
   };

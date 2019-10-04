@@ -23,7 +23,7 @@ class App extends React.Component {
       {
         connected: () => {},
         received: data => {
-	  console.log(data);
+	  console.log("WebSockets Recived data :", data);
 
 	  if (data.action === "delete") {
 	  const leads = this.state.leads.filter(lead => lead.id !== data.id);
@@ -34,7 +34,6 @@ class App extends React.Component {
 	    this.setState({leads: [data].concat(this.state.leads)});
 	  }
 	  if (data.action === "update") {
-	  console.log(" this will be update block")
 	  let index = this.state.leads.findIndex(l => l.id === data.id);
 	  let leadsArr = this.state.leads;
 	  leadsArr.splice(index, 1, data);
@@ -42,14 +41,12 @@ class App extends React.Component {
 	  }
         },
         create: function(leadContent) {
-          console.log('New Content : ', leadContent);
           this.perform('create', {
             title: leadContent.title,
             description: leadContent.description,
           });
 	},
 	delete: function(leadId) {
-	  console.log(leadId)
 	  this.perform('delete', {id: leadId} )
 	},
 	update: function(lead) {
