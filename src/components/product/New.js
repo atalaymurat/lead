@@ -22,7 +22,8 @@ class New extends React.Component {
     formData.set('product[description]', this.state.description);
     axios({
       method: 'post',
-      url: 'http://localhost:3001/products',
+      // url: 'http://localhost:3001/products',
+      url: 'wss://her-app-rails.herokuapp.com/products',
       data: formData,
       config: {
         headers: {'Content-Type': 'multipart/form-data'},

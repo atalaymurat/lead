@@ -17,8 +17,8 @@ class App extends React.Component {
 
   createSocket() {
     let cable = actionCable.createConsumer(
-      // 'wss://her-app-rails.herokuapp.com//cable',
-      'ws://localhost:3001/cable',
+      'wss://her-app-rails.herokuapp.com/cable',
+      //'ws://localhost:3001/cable',
     );
     this.socketLead = cable.subscriptions.create(
       {
