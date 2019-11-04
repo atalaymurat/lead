@@ -3,18 +3,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LeadList from './components/LeadList.js';
 import axios from 'axios';
 import actionCable from 'actioncable';
+import ProductIndex from './components/product/Index.js';
 
 class App extends React.Component {
   state = {
     leads: [],
     title: '',
     description: '',
+    imageAttachments: [],
+    formData:{},
     disabled: false,
   };
 
   createSocket() {
     let cable = actionCable.createConsumer(
-      'wss://her-app-rails.herokuapp.com//cable',
+      // 'wss://her-app-rails.herokuapp.com//cable',
+      'ws://localhost:3001/cable',
     );
     this.socketLead = cable.subscriptions.create(
       {
@@ -23,54 +27,55 @@ class App extends React.Component {
       {
         connected: () => {},
         received: data => {
-	  console.log("WebSockets Recived data :", data);
+          console.log('WebSockets Recived data :', data);
 
-	  if (data.action === "delete") {
-	  const leads = this.state.leads.filter(lead => lead.id !== data.id);
-	  this.setState({leads: leads});
-	  }
+          if (data.action === 'delete') {
+            const leads = this.state.leads.filter(lead => lead.id !== data.id);
+            this.setState({leads: leads});
+          }
 
-	  if (data.action === "create") {
-	    this.setState({leads: [data].concat(this.state.leads)});
-	  }
-	  if (data.action === "update") {
-	  let index = this.state.leads.findIndex(l => l.id === data.id);
-	  let leadsArr = this.state.leads;
-	  leadsArr.splice(index, 1, data);
-	  this.setState({leads: leadsArr});
-	  }
+          if (data.action === 'create') {
+            this.setState({leads: [data].concat(this.state.leads)});
+          }
+          if (data.action === 'update') {
+            let index = this.state.leads.findIndex(l => l.id === data.id);
+            let leadsArr = this.state.leads;
+            leadsArr.splice(index, 1, data);
+            this.setState({leads: leadsArr});
+          }
         },
         create: function(leadContent) {
+          console.log(leadContent);
           this.perform('create', {
             title: leadContent.title,
             description: leadContent.description,
           });
-	},
-	delete: function(leadId) {
-	  this.perform('delete', {id: leadId} )
-	},
-	update: function(lead) {
-	  this.perform('update', {
-	    id: lead.id, 
-	    title: lead.title,
-	    description: lead.description,
-	    created_at: lead.created_at
-	  });
-	}
+        },
+        delete: function(leadId) {
+          this.perform('delete', {id: leadId});
+        },
+        update: function(lead) {
+          this.perform('update', {
+            id: lead.id,
+            title: lead.title,
+            description: lead.description,
+            created_at: lead.created_at,
+          });
+        },
       },
     );
   }
-
+  
   handleChange = event => {
     this.setState({[event.target.name]: event.target.value});
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    if (this.state.disabled){
-    return
+    if (this.state.disabled) {
+      return;
     }
-    this.setState({disabled: true})
+    this.setState({disabled: true});
 
     const lead = {
       title: this.state.title,
@@ -80,7 +85,7 @@ class App extends React.Component {
     this.socketLead.create(lead);
     this.setState({title: '', description: ''});
 
-    this.setState({disabled: false})
+    this.setState({disabled: false});
 
     //axios
     // .post('/leads', lead)
@@ -92,13 +97,12 @@ class App extends React.Component {
   };
 
   deleteLead = id => {
-    this.socketLead.delete(id)
+    this.socketLead.delete(id);
     //axios
     //.delete(`https://her-app-rails.herokuapp.com/leads/${id}`)
     // .then(res => {
     //    console.log(res)
   };
-
 
   updateLead = item => {
     this.socketLead.update(item);
@@ -107,7 +111,8 @@ class App extends React.Component {
 
   getLeads = () => {
     axios
-      .get('https://her-app-rails.herokuapp.com/leads')
+    //.get('https://her-app-rails.herokuapp.com/leads')
+      .get('http://localhost:3001/leads')
       .then(response => this.setState({leads: response.data.leads}))
       .catch(error => console.log(error));
   };
@@ -120,6 +125,17 @@ class App extends React.Component {
   render() {
     return (
       <div className="App container">
+        <div className="row"> 
+          <div className="col">
+          </div>
+          <div className="col">
+          </div>
+        </div>
+        <div className="row mt-2 float-right">
+        <div className="col">
+          <ProductIndex />
+        </div>
+          <div className="col">
         <h1>Leads Hot List</h1>
         <LeadList
           leads={this.state.leads}
@@ -128,10 +144,14 @@ class App extends React.Component {
           handleEdit={this.handleEdit}
           onUpdate={this.updateLead}
           onDelete={this.deleteLead}
+          onDrop={this.onDrop}
           title={this.state.title}
           description={this.state.description}
+          imageAttachments={this.state.imageAttachments}
           disabled={this.state.disabled}
         />
+          </div>
+        </div>
       </div>
     );
   }

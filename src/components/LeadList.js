@@ -12,8 +12,10 @@ class LeadList extends React.Component {
         <NewLeadForm
           handleSubmit={this.props.handleSubmit}
           handleChange={this.props.handleChange}
+          onDrop={this.props.onDrop}
           title={this.props.title}
           description={this.props.description}
+          imageAttachments={this.props.imageAttachments}
           disabled={this.props.disabled}
         />
         {this.props.leads.length === 0 ? (
