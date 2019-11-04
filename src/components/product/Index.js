@@ -7,7 +7,8 @@ class ProductIndex extends React.Component {
   };
   getProducts = () => {
     axios
-      .get('http://localhost:3001/products.json')
+      //.get('http://localhost:3001/products.json')
+      .get('https://her-app-rails.herokuapp.com/products.json')
       .then(response => this.setState({products: response.data}));
   };
   componentDidMount() {

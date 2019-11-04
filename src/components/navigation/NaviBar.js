@@ -10,7 +10,7 @@ class NaviBar extends Component {
               href="/"
               target="_blank">
               <img
-                src='/logo192.png'
+                src='/bulabil/build/logo192.png'
                 alt='bulabil'
                 width="30"
                 height="30"
