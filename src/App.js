@@ -111,8 +111,8 @@ class App extends React.Component {
 
   getLeads = () => {
     axios
-    //.get('https://her-app-rails.herokuapp.com/leads')
-      .get('http://localhost:3001/leads')
+      .get('https://her-app-rails.herokuapp.com/leads')
+    // .get('http://localhost:3001/leads')
       .then(response => this.setState({leads: response.data.leads}))
       .catch(error => console.log(error));
   };
