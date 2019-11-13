@@ -12,7 +12,7 @@ class Routing extends Component {
         <div className="container">
           <NaviBar />
 
-          <Route path="/" exact component={App} />
+          <Route basename="/bulabil/build" path="/" exact component={App} />
           <Route path="/products" component={ProductIndex} />
           <Route path="/product/new" component={ProductNew} />
         </div>

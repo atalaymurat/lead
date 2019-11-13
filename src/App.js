@@ -11,7 +11,7 @@ class App extends React.Component {
     title: '',
     description: '',
     imageAttachments: [],
-    formData:{},
+    formData: {},
     disabled: false,
   };
 
@@ -65,7 +65,7 @@ class App extends React.Component {
       },
     );
   }
-  
+
   handleChange = event => {
     this.setState({[event.target.name]: event.target.value});
   };
@@ -112,7 +112,7 @@ class App extends React.Component {
   getLeads = () => {
     axios
       .get('https://her-app-rails.herokuapp.com/leads')
-    // .get('http://localhost:3001/leads')
+      // .get('http://localhost:3001/leads')
       .then(response => this.setState({leads: response.data.leads}))
       .catch(error => console.log(error));
   };
@@ -124,32 +124,25 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App container">
-        <div className="row"> 
+      <div className="container">
+        <div className="row mt-2">
           <div className="col">
+            <ProductIndex />
           </div>
           <div className="col">
-          </div>
-        </div>
-        <div className="row mt-2 float-right">
-        <div className="col">
-          <ProductIndex />
-        </div>
-          <div className="col">
-        <h1>Leads Hot List</h1>
-        <LeadList
-          leads={this.state.leads}
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          handleEdit={this.handleEdit}
-          onUpdate={this.updateLead}
-          onDelete={this.deleteLead}
-          onDrop={this.onDrop}
-          title={this.state.title}
-          description={this.state.description}
-          imageAttachments={this.state.imageAttachments}
-          disabled={this.state.disabled}
-        />
+            <LeadList
+              leads={this.state.leads}
+              handleChange={this.handleChange}
+              handleSubmit={this.handleSubmit}
+              handleEdit={this.handleEdit}
+              onUpdate={this.updateLead}
+              onDelete={this.deleteLead}
+              onDrop={this.onDrop}
+              title={this.state.title}
+              description={this.state.description}
+              imageAttachments={this.state.imageAttachments}
+              disabled={this.state.disabled}
+            />
           </div>
         </div>
       </div>

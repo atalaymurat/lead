@@ -9,6 +9,7 @@ class LeadList extends React.Component {
   render() {
     return (
       <div>
+        <h3>Leads#leadlist</h3>
         <NewLeadForm
           handleSubmit={this.props.handleSubmit}
           handleChange={this.props.handleChange}
