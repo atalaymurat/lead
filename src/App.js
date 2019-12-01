@@ -126,10 +126,10 @@ class App extends React.Component {
     return (
       <div className="container">
         <div className="row mt-2">
-          <div className="col">
+          <div className="col-md-6">
             <ProductIndex />
           </div>
-          <div className="col">
+          <div className="col-md-6">
             <LeadList
               leads={this.state.leads}
               handleChange={this.handleChange}

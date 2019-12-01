@@ -1,19 +1,10 @@
 import React from 'react';
-import Form from './Form';
+import ProductForm from './Form';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom';
 
 class New extends React.Component {
-  state = {
-    title: '',
-    description: '',
-    file: '',
-    saving: false
-  };
 
-  handleChange = e => {
-    this.setState({[e.target.name]: e.target.value});
-  };
   handleSubmit = e => {
     e.preventDefault();
     this.setState({ saving: true})
@@ -25,8 +16,8 @@ class New extends React.Component {
     formData.set('product[description]', this.state.description);
     axios({
       method: 'post',
-      // url: 'http://localhost:3001/products',
-      url: 'https://her-app-rails.herokuapp.com/products',
+      url: 'http://localhost:3001/products',
+      //url: 'https://her-app-rails.herokuapp.com/products',
       data: formData,
       config: {
         headers: {'Content-Type': 'multipart/form-data'},
@@ -39,30 +30,14 @@ class New extends React.Component {
     this.setState({ saving: false})
   };
 
-  handleFileUpload = file => {
-    this.setState({file: file});
-  };
-
-  renderSaving = () => {
-    if (this.state.saving)
-      return (
-        <div>Saving...</div>
-      )
-  }
-
   render() {
     return (
       <div>
-      
-        
         <p>New#Product</p>
-        <Form
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          handleFileUpload={this.handleFileUpload}
+        <ProductForm
+          history={this.props.history}
+          match={this.props.match}
         />
-
-      { this.renderSaving()  }  
       </div>
 
     );

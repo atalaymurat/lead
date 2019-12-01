@@ -42,7 +42,7 @@ class ImageUpload extends Component {
         </div>
         <div className="row">
           <div className="col">
-            {!$imagePreview && <img src={imagePreviewUrl} height={100} />}
+            {!$imagePreview && <img src={imagePreviewUrl} height={100} alt="preview" />}
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
   "name": "bulabil-ReactApp",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://makinatr.com/bulabil/build/",
+  "homepage": "http://makinatr.com/bulabil/build",
   "proxy": "http://localhost:3001",
   "devDependencies": {
     "react-scripts": "3.1.2"
